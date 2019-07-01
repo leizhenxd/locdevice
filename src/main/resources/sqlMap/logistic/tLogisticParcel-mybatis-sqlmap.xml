@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ld.logistic.domain.TLogisticParcelMapper">
+
+	<resultMap type="com.ld.logistic.domain.TLogisticParcelDO" id="TLogisticParcelDOResultMap">
+		<id column="id" property="id" />
+        <result column="name" property="name"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="user_id" property="userId"/>
+        <result column="from_lat" property="fromLat"/>
+        <result column="from_lng" property="fromLng"/>
+        <result column="to_lat" property="toLat"/>
+        <result column="to_lng" property="toLng"/>
+        <result column="status" property="status"/>
+        <result column="node" property="node"/>
+        <result column="begin_city" property="beginCity"/>
+        <result column="end_city" property="endCity"/>
+        <result column="code" property="code"/>
+	</resultMap>
+
+	<sql id="MybatisTLogisticParcelDAO_all_column_fields">
+	      id,name,create_time,update_time,user_id,from_lat,from_lng,to_lat,to_lng,status,node,code,begin_city,end_city
+ 	</sql>
+	<!-- 只有varchar char text类型 做 !='' 判断，生成代码时,其他类型时只做!=null 决断 0或fasle与空''是相同的，在mybatis中的动态语句中 -->
+	<sql id="MybatisTLogisticParcelDAO_dynamic_where_fields"><!-- xml转义字符需要 <![CDATA[   ]]> 标签-->
+		<where>
+			<if test="name != null  and name != '' "> AND name=#{name} </if>
+			<if test="userId != null "> AND user_id=#{userId} </if>
+			<if test="fromLat != null  and fromLat != '' "> AND from_lat=#{fromLat} </if>
+			<if test="fromLng != null  and fromLng != '' "> AND from_lng=#{fromLng} </if>
+			<if test="toLat != null  and toLat != '' "> AND to_lat=#{toLat} </if>
+			<if test="toLng != null  and toLng != '' "> AND to_lng=#{toLng} </if>
+			<if test="status != null "> AND status=#{status} </if>
+			<if test="node != null "> AND node=#{node} </if>
+			<if test="beginCity != null  and beginCity != '' "> AND begin_city=#{beginCity} </if>
+			<if test="endCity != null  and endCity != '' "> AND end_city=#{endCity} </if>
+			<if test="code != null  and code != '' "> AND code=#{code} </if>
+		</where>
+ 	</sql>
+
+	<select id="MybatisTLogisticParcelDAO_selectById" parameterType="long" resultMap="TLogisticParcelDOResultMap">
+	SELECT
+		<include refid="MybatisTLogisticParcelDAO_all_column_fields" />
+	FROM
+		t_logistic_parcel
+	WHERE
+		 id = #{id}
+	</select>
+
+    <insert id="MybatisTLogisticParcelDAO_insert" parameterType="com.ld.logistic.domain.TLogisticParcelDO" useGeneratedKeys="true">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO t_logistic_parcel(
+				id,
+				name,
+				create_time,
+				update_time,
+				user_id,
+				from_lat,
+				from_lng,
+				to_lat,
+				to_lng,
+				status,
+				node,
+				code,
+				begin_city,
+				end_city
+		)values(
+				#{id},
+				#{name},
+				#{createTime},
+				#{updateTime},
+				#{userId},
+				#{fromLat},
+				#{fromLng},
+				#{toLat},
+				#{toLng},
+				#{status},
+				#{node},
+				#{code},
+				#{beginCity},
+				#{endCity}
+		)
+    </insert>
+
+	<update id="MybatisTLogisticParcelDAO_updateById" parameterType="com.ld.logistic.domain.TLogisticParcelDO">
+		UPDATE t_logistic_parcel
+		SET
+					name = #{name},
+					user_id = #{userId},
+					from_lat = #{fromLat},
+					from_lng = #{fromLng},
+					to_lat = #{toLat},
+					to_lng = #{toLng},
+					status = #{status},
+					node = #{node},
+					begin_city = #{beginCity},
+					end_city = #{endCity},
+					update_time=now(),
+					code=#{code}
+		WHERE
+			id = #{id}
+	</update>
+
+	<delete id="MybatisTLogisticParcelDAO_deleteById" parameterType="long">
+		DELETE FROM t_logistic_parcel WHERE id = #{id}
+	</delete>
+
+	<update id="MybatisTLogisticParcelDAO_update_dynamic" parameterType="com.ld.logistic.domain.TLogisticParcelDO">
+		UPDATE t_logistic_parcel
+		<set>
+					<if test="name != null  and name != '' ">name=#{name},</if>
+					<if test="userId != null ">user_id=#{userId},</if>
+					<if test="fromLat != null  and fromLat != '' ">from_lat=#{fromLat},</if>
+					<if test="fromLng != null  and fromLng != '' ">from_lng=#{fromLng},</if>
+					<if test="toLat != null  and toLat != '' ">to_lat=#{toLat},</if>
+					<if test="toLng != null  and toLng != '' ">to_lng=#{toLng},</if>
+					<if test="status != null ">status=#{status},</if>
+					<if test="node != null ">node=#{node},</if>
+					<if test="updateTime != null ">update_time=#{updateTime},</if>
+					<if test="beginCity != null  and beginCity != '' ">begin_city=#{beginCity},</if>
+					<if test="endCity != null  and endCity != '' ">end_city=#{endCity},</if>
+					<if test="code != null  and code != '' ">code=#{code},</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+ 	<select id="MybatisTLogisticParcelDAO_select_dynamic" resultMap="TLogisticParcelDOResultMap" parameterType="com.ld.logistic.domain.TLogisticParcelDO">
+	     SELECT
+	     	<include refid="MybatisTLogisticParcelDAO_all_column_fields" />
+		 FROM
+		 	t_logistic_parcel
+			<include refid="MybatisTLogisticParcelDAO_dynamic_where_fields" />
+ 	</select>
+
+ 	<select id="MybatisTLogisticParcelDAO_select_dynamic_count" resultType="long" parameterType="com.ld.logistic.domain.TLogisticParcelDO">
+	     SELECT
+	     	count(1)
+		 FROM
+		 	t_logistic_parcel
+	 	<include refid="MybatisTLogisticParcelDAO_dynamic_where_fields" />
+ 	</select>
+
+ 	<select id="MybatisTLogisticParcelDAO_select_dynamic_page_query" resultMap="TLogisticParcelDOResultMap" parameterType="com.ld.logistic.domain.TLogisticParcelDO">
+	     SELECT
+	     	<include refid="MybatisTLogisticParcelDAO_all_column_fields" />
+		 FROM
+		 	t_logistic_parcel
+	 	<include refid="MybatisTLogisticParcelDAO_dynamic_where_fields" />
+	 	Limit #{start},#{pageSize}
+ 	</select>
+
+</mapper>

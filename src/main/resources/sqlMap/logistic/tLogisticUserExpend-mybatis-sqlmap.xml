@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ld.logistic.domain.TLogisticUserExpendMapper">
+
+	<resultMap type="com.ld.logistic.domain.TLogisticUserExpendDO" id="TLogisticUserExpendDOResultMap">
+		<id column="id" property="id" />
+        <result column="user_id" property="userId"/>
+        <result column="company_address" property="companyAddress"/>
+        <result column="lat" property="lat"/>
+        <result column="lng" property="lng"/>
+	</resultMap>
+
+	<sql id="MybatisTLogisticUserExpendDAO_all_column_fields">
+	      id,user_id,company_address,lat,lng
+ 	</sql>
+	<!-- 只有varchar char text类型 做 !='' 判断，生成代码时,其他类型时只做!=null 决断 0或fasle与空''是相同的，在mybatis中的动态语句中 -->
+	<sql id="MybatisTLogisticUserExpendDAO_dynamic_where_fields"><!-- xml转义字符需要 <![CDATA[   ]]> 标签-->
+		<where>
+			<if test="userId != null "> AND user_id=#{userId} </if>
+			<if test="companyAddress != null  and companyAddress != '' "> AND company_address=#{companyAddress} </if>
+			<if test="lat != null  and lat != '' "> AND lat=#{lat} </if>
+			<if test="lng != null  and lng != '' "> AND lng=#{lng} </if>
+		</where>
+ 	</sql>
+
+	<select id="MybatisTLogisticUserExpendDAO_selectById" parameterType="long" resultMap="TLogisticUserExpendDOResultMap">
+	SELECT
+		<include refid="MybatisTLogisticUserExpendDAO_all_column_fields" />
+	FROM
+		t_logistic_user_expend
+	WHERE
+		 id = #{id}
+	</select>
+
+    <insert id="MybatisTLogisticUserExpendDAO_insert" parameterType="com.ld.logistic.domain.TLogisticUserExpendDO" useGeneratedKeys="true">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO t_logistic_user_expend(
+				id,
+				user_id,
+				company_address,
+				lat,
+				lng
+		)values(
+				#{id},
+				#{userId},
+				#{companyAddress},
+				#{lat},
+				#{lng}
+		)
+    </insert>
+
+	<update id="MybatisTLogisticUserExpendDAO_updateById" parameterType="com.ld.logistic.domain.TLogisticUserExpendDO">
+		UPDATE t_logistic_user_expend
+		SET
+					user_id = #{userId},
+					company_address = #{companyAddress},
+					lat = #{lat},
+					lng = #{lng}
+		WHERE
+			id = #{id}
+	</update>
+
+	<delete id="MybatisTLogisticUserExpendDAO_deleteById" parameterType="long">
+		DELETE FROM t_logistic_user_expend WHERE id = #{id}
+	</delete>
+
+	<update id="MybatisTLogisticUserExpendDAO_update_dynamic" parameterType="com.ld.logistic.domain.TLogisticUserExpendDO">
+		UPDATE t_logistic_user_expend
+		<set>
+					<if test="userId != null ">user_id=#{userId},</if>
+					<if test="companyAddress != null  and companyAddress != '' ">company_address=#{companyAddress},</if>
+					<if test="lat != null  and lat != '' ">lat=#{lat},</if>
+					<if test="lng != null  and lng != '' ">lng=#{lng},</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+ 	<select id="MybatisTLogisticUserExpendDAO_select_dynamic" resultMap="TLogisticUserExpendDOResultMap" parameterType="com.ld.logistic.domain.TLogisticUserExpendDO">
+	     SELECT
+	     	<include refid="MybatisTLogisticUserExpendDAO_all_column_fields" />
+		 FROM
+		 	t_logistic_user_expend
+			<include refid="MybatisTLogisticUserExpendDAO_dynamic_where_fields" />
+ 	</select>
+
+ 	<select id="MybatisTLogisticUserExpendDAO_select_dynamic_count" resultType="long" parameterType="com.ld.logistic.domain.TLogisticUserExpendDO">
+	     SELECT
+	     	count(1)
+		 FROM
+		 	t_logistic_user_expend
+	 	<include refid="MybatisTLogisticUserExpendDAO_dynamic_where_fields" />
+ 	</select>
+
+ 	<select id="MybatisTLogisticUserExpendDAO_select_dynamic_page_query" resultMap="TLogisticUserExpendDOResultMap" parameterType="com.ld.logistic.domain.TLogisticUserExpendDO">
+	     SELECT
+	     	<include refid="MybatisTLogisticUserExpendDAO_all_column_fields" />
+		 FROM
+		 	t_logistic_user_expend
+	 	<include refid="MybatisTLogisticUserExpendDAO_dynamic_where_fields" />
+	 	Limit #{start},#{pageSize}
+ 	</select>
+
+</mapper>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ld.model.RoleFunctionMapper">
+
+	<resultMap type="com.ld.model.RoleFunction" id="roleFunctionMapper">
+		<id column="id" property="id" />
+        <result column="role_id" property="roleId"/>
+        <result column="function_id" property="functionId"/>
+        <result column="is_deleted" property="isDeleted"/>
+        <result column="create_time" property="createTime"/>
+	</resultMap>
+
+	<sql id="all_column_fields">
+	      id,role_id, function_id,is_deleted ,create_time
+ 	</sql>
+	<sql id="roleFunction_where_fields"><!-- xml转义字符需要 <![CDATA[   ]]> 标签-->
+		<where>
+			<if test="id != null  "> AND id=#{id} </if>
+			<if test="roleId != null  "> AND role_id=#{roleId} </if>
+			<if test="functionId != null  "> AND function_id=#{functionId} </if>
+			<if test="isDeleted != null  "> AND is_deleted=#{isDeleted} </if>
+			<if test="createTime != null"> AND create_time=#{createTime} </if>
+		</where>
+ 	</sql>
+
+	<select id="MybatisRoleFunctionDAO_selectById" parameterType="int" resultMap="roleFunctionMapper">
+	SELECT
+		<include refid="all_column_fields" />
+	FROM
+		t_role_function
+	WHERE
+		 id = #{id}
+	</select>
+
+    <insert id="MybatisRoleFunctionDAO_insert" parameterType="com.ld.model.RoleFunction" useGeneratedKeys="true">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO t_role_function(
+				role_id,
+				function_id,
+				is_deleted
+		)values(
+				#{roleId},
+				#{functionId},
+				#{isDeleted}
+		)
+    </insert>
+
+	<update id="MybatisRoleFunctionDAO_updateById" parameterType="com.ld.model.RoleFunction">
+		UPDATE t_role_function
+		SET
+					role_id = #{roleId},
+					function_id = #{functionId},
+					is_deleted = #{isDeleted}
+		WHERE
+			id = #{id}
+	</update>
+
+	<delete id="MybatisRoleFunctionDAO_deleteById" parameterType="long">
+		DELETE FROM t_role_function WHERE id = #{id}
+	</delete>
+
+	<update id="MybatisRoleFunctionDAO_update_dynamic" parameterType="com.ld.model.RoleFunction">
+		UPDATE t_role_function
+		<set>
+					<if test="roleId != null">role_id=#{roleId},</if>
+					<if test="functionId != null">function_id=#{functionId},</if>
+					<if test="isDeleted != null">is_deleted=#{isDeleted},</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+ 	<select id="MybatisRoleFunctionDAO_select_dynamic" resultMap="roleFunctionMapper" parameterType="com.ld.model.RoleFunction">
+	     SELECT
+	     	<include refid="all_column_fields" />
+		 FROM
+		 	t_role_function
+			<include refid="roleFunction_where_fields" />
+ 	</select>
+
+ 	<select id="MybatisRoleFunctionDAO_select_dynamic_count" resultType="long" parameterType="com.ld.model.RoleFunction">
+	     SELECT
+	     	count(1)
+		 FROM
+		 	t_role_function
+	 	<include refid="roleFunction_where_fields" />
+ 	</select>
+
+ 	<select id="MybatisRoleFunctionDAO_select_dynamic_page_query" resultMap="roleFunctionMapper" parameterType="com.ld.model.RoleFunction">
+	     SELECT
+	     	<include refid="all_column_fields" />
+		 FROM
+		 	t_role_function
+	 	<include refid="roleFunction_where_fields" />
+	 	Limit #{start},#{pageSize}
+ 	</select>
+
+</mapper>

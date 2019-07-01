@@ -1,0 +1,63 @@
+li {
+	background-color: rgb(159,206,186);
+	width: 96%;
+	height: 6em;
+	margin-left: 2%;
+	margin-top: 0.5em;
+	position: relative;
+}
+li img {
+	float: left;
+}
+li div {
+	color: white;
+	font-size: 1em;
+	padding-left: 0.2em;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+li div div{
+	 height:1.8em;
+	 margin-top: 3px;
+	 text-indent: 3%;
+}
+#scroller {
+	position: absolute;
+	z-index: 1;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	width: 100%;
+	-webkit-transform: translateZ(0);
+	-moz-transform: translateZ(0);
+	-ms-transform: translateZ(0);
+	-o-transform: translateZ(0);
+	transform: translateZ(0);
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-text-size-adjust: none;
+	-moz-text-size-adjust: none;
+	-ms-text-size-adjust: none;
+	-o-text-size-adjust: none;
+	text-size-adjust: none;
+}
+#tips {
+	text-align: center;
+	color: black;
+	width: 100%;
+	display: none;
+}
+.delete{
+	position:absolute;
+	top:0;
+	right:0%;
+	background-color:red;
+	height: 100%;
+	line-height: 5em;
+	height: 6em;
+	width: 3.5em;
+	text-align: center;
+}

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ld.logistic.domain.TLogisticScanRecordMapper">
+
+	<resultMap type="com.ld.logistic.domain.TLogisticScanRecordDO" id="TLogisticScanRecordDOResultMap">
+		<id column="id" property="id" />
+        <result column="user_id" property="userId"/>
+        <result column="status" property="status"/>
+        <result column="parcel_id" property="parcelId"/>
+        <result column="address" property="address"/>
+        <result column="hash_code" property="hashCode"/>
+        <result column="create_time" property="createTime"/>
+        <result column="lat" property="lat"/>
+        <result column="lng" property="lng"/>
+	</resultMap>
+
+	<sql id="MybatisTLogisticScanRecordDAO_all_column_fields">
+	      id,user_id,parcel_id,status,address,hash_code,create_time,lat,lng
+ 	</sql>
+	<!-- 只有varchar char text类型 做 !='' 判断，生成代码时,其他类型时只做!=null 决断 0或fasle与空''是相同的，在mybatis中的动态语句中 -->
+	<sql id="MybatisTLogisticScanRecordDAO_dynamic_where_fields"><!-- xml转义字符需要 <![CDATA[   ]]> 标签-->
+		<where>
+			<if test="userId != null "> AND user_id=#{userId} </if>
+			<if test="parcelId != null "> AND parcel_id=#{parcelId} </if>
+			<if test="address != null  and address != '' "> AND address=#{address} </if>
+			<if test="hashCode != null  and hashCode != '' "> AND hash_code=#{hashCode} </if>
+			<if test="lat != null  and lat != '' "> AND lat=#{lat} </if>
+			<if test="lng != null  and lng != '' "> AND lng=#{lng} </if>
+		</where>
+ 	</sql>
+
+	<select id="MybatisTLogisticScanRecordDAO_selectById" parameterType="long" resultMap="TLogisticScanRecordDOResultMap">
+	SELECT
+		<include refid="MybatisTLogisticScanRecordDAO_all_column_fields" />
+	FROM
+		t_logistic_scan_record
+	WHERE
+		 id = #{id}
+	</select>
+
+    <insert id="MybatisTLogisticScanRecordDAO_insert" parameterType="com.ld.logistic.domain.TLogisticScanRecordDO" useGeneratedKeys="true">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO t_logistic_scan_record(
+				id,
+				user_id,
+				status,
+				parcel_id,
+				address,
+				hash_code,
+				create_time,
+				lat,
+				lng
+		)values(
+				#{id},
+				#{userId},
+				#{status},
+				#{parcelId},
+				#{address},
+				#{hashCode},
+				#{createTime},
+				#{lat},
+				#{lng}
+		)
+    </insert>
+
+	<update id="MybatisTLogisticScanRecordDAO_updateById" parameterType="com.ld.logistic.domain.TLogisticScanRecordDO">
+		UPDATE t_logistic_scan_record
+		SET
+					user_id = #{userId},
+					parcel_id = #{parcelId},
+					address = #{address},
+					hash_code = #{hashCode},
+					lat = #{lat},
+					lng = #{lng}
+		WHERE
+			id = #{id}
+	</update>
+
+	<delete id="MybatisTLogisticScanRecordDAO_deleteById" parameterType="long">
+		DELETE FROM t_logistic_scan_record WHERE id = #{id}
+	</delete>
+
+	<update id="MybatisTLogisticScanRecordDAO_update_dynamic" parameterType="com.ld.logistic.domain.TLogisticScanRecordDO">
+		UPDATE t_logistic_scan_record
+		<set>
+					<if test="userId != null ">user_id=#{userId},</if>
+					<if test="parcelId != null ">parcel_id=#{parcelId},</if>
+					<if test="address != null  and address != '' ">address=#{address},</if>
+					<if test="hashCode != null  and hashCode != '' ">hash_code=#{hashCode},</if>
+					<if test="lat != null  and lat != '' ">lat=#{lat},</if>
+					<if test="lng != null  and lng != '' ">lng=#{lng},</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+ 	<select id="MybatisTLogisticScanRecordDAO_select_dynamic" resultMap="TLogisticScanRecordDOResultMap" parameterType="com.ld.logistic.domain.TLogisticScanRecordDO">
+	     SELECT
+	     	<include refid="MybatisTLogisticScanRecordDAO_all_column_fields" />
+		 FROM
+		 	t_logistic_scan_record
+			<include refid="MybatisTLogisticScanRecordDAO_dynamic_where_fields" />
+ 	</select>
+
+ 	<select id="MybatisTLogisticScanRecordDAO_select_dynamic_count" resultType="long" parameterType="com.ld.logistic.domain.TLogisticScanRecordDO">
+	     SELECT
+	     	count(1)
+		 FROM
+		 	t_logistic_scan_record
+	 	<include refid="MybatisTLogisticScanRecordDAO_dynamic_where_fields" />
+ 	</select>
+
+ 	<select id="MybatisTLogisticScanRecordDAO_select_dynamic_page_query" resultType="com.ld.response.logistic.ScanRecordHistory" parameterType="com.ld.logistic.domain.TLogisticScanRecordDO">
+	     select 
+			u1.wallet_id as walletId,
+			u2.wallet_id as orgWalletId,
+			r.create_time as createTime,
+			u1.real_name as userName,
+			p.id as id,
+			p.code as code,
+			r.address as address,
+			r.status as status
+			from t_logistic_scan_record r
+			left join t_logistic_user u1 on r.user_id = u1.id
+			left join t_logistic_parcel p on p.id=r.parcel_id
+			left join t_logistic_user u2 on u2.id=p.user_id
+			order by r.create_time desc
+	 	Limit #{start},#{rows}
+ 	</select>
+	
+	<select id="queryDeliverHistory" parameterType="java.lang.Long" resultType="com.ld.response.logistic.DeliverHistory">
+		select record.id as id,
+		parcel.node as node,
+		parcel.begin_city as beginCity,
+		parcel.end_city as endCity,
+		parcel.status as status,
+		parcel.name as name,
+		parcel.id as parcelId,
+		record.create_time as scanDate,
+		record.hash_code as hashCode,
+		parcel.code as code
+		from t_logistic_scan_record record
+		left join t_logistic_parcel parcel on parcel.id=record.parcel_id
+		where record.user_id=#{userId}
+		order by record.create_time desc
+	</select>
+	
+	<select id="queryParcelInfoById" parameterType="java.lang.Long" resultMap="TLogisticScanRecordDOResultMap">
+		SELECT
+	     	<include refid="MybatisTLogisticScanRecordDAO_all_column_fields" />
+		 FROM
+		 	t_logistic_scan_record
+		 where parcel_id=#{parcelId}
+		 order by create_time desc
+	</select>
+
+</mapper>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ld.model.DeviceInfoMapper">
+
+	<resultMap type="com.ld.model.DeviceInfo" id="DeviceInfoDOResultMap">
+		<id column="id" property="id" />
+        <result column="name" property="name"/>
+        <result column="imei" property="imei"/>
+        <result column="device_origin_id" property="deviceOriginId"/>
+        <result column="device_type" property="deviceType"/>
+        <result column="status" property="status"/>
+        <result column="area_id" property="areaId"/>
+        <result column="area_name" property="areaName"/>
+        <result column="lat" property="lat"/>
+        <result column="lng" property="lng"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_user" property="createUser"/>
+        <result column="update_user" property="updateUser"/>
+	</resultMap>
+
+	<sql id="MybatisDeviceInfoDAO_all_column_fields">
+	      id,name,imei,device_origin_id,device_type,status,area_id,area_name,lat,lng,province,city,create_time,update_time,create_user,update_user
+ 	</sql>
+	<!-- 只有varchar char text类型 做 !='' 判断，生成代码时,其他类型时只做!=null 决断 0或fasle与空''是相同的，在mybatis中的动态语句中 -->
+	<sql id="MybatisDeviceInfoDAO_dynamic_where_fields"><!-- xml转义字符需要 <![CDATA[   ]]> 标签-->
+		<where>
+			<if test="name != null  and name != '' "> AND name=#{name} </if>
+			<if test="imei != null  and imei != '' "> AND imei=#{imei} </if>
+			<if test="deviceOriginId != null  and deviceOriginId != '' "> AND device_origin_id=#{deviceOriginId} </if>
+			<if test="deviceType != null "> AND device_type=#{deviceType} </if>
+			<if test="status != null "> AND status=#{status} </if>
+			<if test="areaId != null "> AND area_id=#{areaId} </if>
+			<if test="areaName != null  and areaName != '' "> AND area_name=#{areaName} </if>
+			<if test="lat != null  and lat != '' "> AND lat=#{lat} </if>
+			<if test="lng != null  and lng != '' "> AND lng=#{lng} </if>
+			<if test="province != null  and province != '' "> AND province=#{province} </if>
+			<if test="city != null  and city != '' "> AND city=#{city} </if>
+			<if test="createUser != null  and createUser != '' "> AND create_user=#{createUser} </if>
+			<if test="updateUser != null  and updateUser != '' "> AND update_user=#{updateUser} </if>
+		</where>
+ 	</sql>
+
+	<select id="MybatisDeviceInfoDAO_selectById" parameterType="long" resultMap="DeviceInfoDOResultMap">
+	SELECT
+		<include refid="MybatisDeviceInfoDAO_all_column_fields" />
+	FROM
+		t_device_info
+	WHERE
+		 id = #{id}
+	</select>
+
+    <insert id="MybatisDeviceInfoDAO_insert" parameterType="com.ld.model.DeviceInfo" useGeneratedKeys="true">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO t_device_info(
+				id,
+				name,
+				imei,
+				device_origin_id
+				device_type,
+				status,
+				area_id,
+				area_name,
+				lat,
+				lng,
+				province,
+				city,
+				create_time,
+				update_time,
+				create_user,
+				update_user
+		)values(
+				#{id},
+				#{name},
+				#{imei},
+				#{deviceType},
+				#{status},
+				#{areaId},
+				#{areaName},
+				#{lat},
+				#{lng},
+				#{province},
+				#{city},
+				#{createTime},
+				#{updateTime},
+				#{createUser},
+				#{updateUser}
+		)
+    </insert>
+
+	<update id="MybatisDeviceInfoDAO_updateById" parameterType="com.ld.model.DeviceInfo">
+		UPDATE t_device_info
+		SET
+					name = #{name},
+					imei = #{imei},
+					device_origin_id = #{deviceOriginId},
+					device_type = #{deviceType},
+					status = #{status},
+					area_id = #{areaId},
+					area_name = #{areaName},
+					lat = #{lat},
+					lng = #{lng},
+					province = #{province},
+					city = #{city},
+					update_time = #{updateTime},
+					create_user = #{createUser},
+					update_user = #{updateUser}
+		WHERE
+			id = #{id}
+	</update>
+
+	<delete id="MybatisDeviceInfoDAO_deleteById" parameterType="long">
+		DELETE FROM t_device_info WHERE id = #{id}
+	</delete>
+
+	<update id="MybatisDeviceInfoDAO_update_dynamic" parameterType="com.ld.model.DeviceInfo">
+		UPDATE t_device_info
+		<set>
+					<if test="name != null  and name != '' ">name=#{name},</if>
+					<if test="imei != null  and imei != '' ">imei=#{imei},</if>
+					<if test="deviceOriginId != null  and deviceOriginId != '' ">device_origin_id=#{deviceOriginId},</if>
+					<if test="deviceType != null ">device_type=#{deviceType},</if>
+					<if test="status != null ">status=#{status},</if>
+					<if test="areaId != null ">area_id=#{areaId},</if>
+					<if test="areaName != null  and areaName != '' ">area_name=#{areaName},</if>
+					<if test="lat != null  and lat != '' ">lat=#{lat},</if>
+					<if test="lng != null  and lng != '' ">lng=#{lng},</if>
+					<if test="province != null  and province != '' ">province=#{province},</if>
+					<if test="city != null  and city != '' ">city=#{city},</if>
+					<if test="updateTime != null ">update_time=#{updateTime},</if>
+					<if test="createUser != null  and createUser != '' ">create_user=#{createUser},</if>
+					<if test="updateUser != null  and updateUser != '' ">update_user=#{updateUser},</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+ 	<select id="MybatisDeviceInfoDAO_select_dynamic" resultMap="DeviceInfoDOResultMap" parameterType="com.ld.model.DeviceInfo">
+	     SELECT
+	     	<include refid="MybatisDeviceInfoDAO_all_column_fields" />
+		 FROM
+		 	t_device_info
+			<include refid="MybatisDeviceInfoDAO_dynamic_where_fields" />
+ 	</select>
+
+ 	<select id="MybatisDeviceInfoDAO_select_dynamic_count" resultType="long" parameterType="com.ld.model.DeviceInfo">
+	     SELECT
+	     	count(1)
+		 FROM
+		 	t_device_info
+	 	<include refid="MybatisDeviceInfoDAO_dynamic_where_fields" />
+ 	</select>
+
+ 	<select id="MybatisDeviceInfoDAO_select_dynamic_page_query" resultMap="DeviceInfoDOResultMap" parameterType="com.ld.model.DeviceInfo">
+	     SELECT
+	     	<include refid="MybatisDeviceInfoDAO_all_column_fields" />
+		 FROM
+		 	t_device_info
+	 	<include refid="MybatisDeviceInfoDAO_dynamic_where_fields" />
+	 	Limit #{start},#{rows}
+ 	</select>
+ 	
+ 	<select id="selectByAreaAndDeviceTypes" parameterType="java.util.Map" resultMap="DeviceInfoDOResultMap" >
+ 		SELECT
+	     	<include refid="MybatisDeviceInfoDAO_all_column_fields" />
+		 FROM
+		 	t_device_info
+		 	where 1=1
+		 	<if test="areaId != null">
+		 		and area_id=#{areaId}
+		 	</if>
+		 	<if test="deviceTypes != null and deviceTypes.size()>0">
+		 		and device_type in
+			 	<foreach collection="deviceTypes" item="item" index="index" open="(" close=")" separator=",">
+			       #{item}
+			   </foreach>
+		 	</if>
+ 	</select>
+
+</mapper>

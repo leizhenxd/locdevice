@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ld.model.UserMapper">
+
+	<resultMap type="com.ld.model.User" id="userMapper">
+		<id column="id" property="id" />
+		
+        <result column="role_id" property="roleId"/>
+        <result column="user_name" property="userName"/>
+        <result column="phone" property="phone"/>
+        <result column="password" property="password"/>
+        <result column="salt" property="salt"/>
+        <result column="create_time" property="createTime" />
+	</resultMap>
+
+	<sql id="all_column_fields">
+	      id,role_id,user_name,phone,password,salt,create_time
+ 	</sql>
+	<sql id="user_where_fields"><!-- xml转义字符需要 <![CDATA[   ]]> 标签-->
+		<where>
+			<if test="roleId != null  "> AND role_id=#{roleId} </if>
+			<if test="userName != null and userName !='' "> AND user_name=#{userName} </if>
+			<if test="phone != null  and phone != '' "> AND phone=#{phone} </if>
+			<if test="password != null  and password != '' "> AND password=#{password} </if>
+			<if test="salt != null  and salt != '' "> AND salt=#{salt} </if>
+			<if test="createTime != null"> AND create_time=#{createTime} </if>
+		</where>
+ 	</sql>
+
+	<select id="MybatisUserDAO_selectById" parameterType="int" resultMap="userMapper">
+	SELECT
+		<include refid="all_column_fields" />
+	FROM
+		t_user
+	WHERE
+		 id = #{id}
+	</select>
+
+    <insert id="MybatisUserDAO_insert" parameterType="com.ld.model.User" useGeneratedKeys="true">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO t_user(
+				role_id,
+				user_name,
+				phone,
+				password,
+				salt
+		)values(
+				#{roleId},
+				#{userName},
+				#{phone},
+				#{password},
+				#{salt}
+		)
+    </insert>
+
+	<update id="MybatisUserDAO_updateById" parameterType="com.ld.model.User">
+		UPDATE t_user
+		SET
+					role_id = #{roleId},
+					user_name = #{userName},
+					phone = #{phone},
+					password = #{password},
+					salt = #{salt},
+		WHERE
+			id = #{id}
+	</update>
+
+	<delete id="MybatisUserDAO_deleteById" parameterType="long">
+		DELETE FROM t_user WHERE id = #{id}
+	</delete>
+
+	<update id="MybatisUserDAO_update_dynamic" parameterType="com.ld.model.User">
+		UPDATE t_user
+		<set>
+					<if test="roleId != null">role_id=#{roleId},</if>
+					<if test="userName != null  and userName != '' ">user_name=#{userName},</if>
+					<if test="phone != null  and phone != '' ">phone=#{phone},</if>
+					<if test="password != null  and password != '' ">password=#{password},</if>
+					<if test="salt != null">salt=#{salt},</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+ 	<select id="MybatisUserDAO_select_dynamic" resultMap="userMapper" parameterType="com.ld.model.User">
+	     SELECT
+	     	<include refid="all_column_fields" />
+		 FROM
+		 	t_user
+			<include refid="user_where_fields" />
+ 	</select>
+
+ 	<select id="MybatisUserDAO_select_dynamic_count" resultType="long" parameterType="com.ld.model.User">
+	     SELECT
+	     	count(1)
+		 FROM
+		 	t_user
+	 	<include refid="user_where_fields" />
+ 	</select>
+
+ 	<select id="MybatisUserDAO_select_dynamic_page_query" resultMap="userMapper" parameterType="com.ld.model.User">
+	     SELECT
+	     	<include refid="all_column_fields" />
+		 FROM
+		 	t_user
+	 	<include refid="user_where_fields" />
+	 	Limit #{start},#{rows}
+ 	</select>
+
+</mapper>

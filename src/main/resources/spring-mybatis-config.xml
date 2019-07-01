@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE configuration PUBLIC  
+    "-//mybatis.org//DTD Config 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">  
+<configuration>  
+    
+    <mappers>  
+		<mapper resource="sqlMap/function-mybatis-sqlmap.xml" />
+		<mapper resource="sqlMap/role-mybatis-sqlmap.xml" />
+		<mapper resource="sqlMap/roleFunction-mybatis-sqlmap.xml" />
+		<mapper resource="sqlMap/user-mybatis-sqlmap.xml" />
+		<mapper resource="sqlMap/area-mybatis-sqlmap.xml" />
+		<mapper resource="sqlMap/deviceInfo-mybatis-sqlmap.xml" />
+		
+		<mapper resource="sqlMap/logistic/tLogisticScanRecord-mybatis-sqlmap.xml" />
+		<mapper resource="sqlMap/logistic/tLogisticUserExpend-mybatis-sqlmap.xml" />
+		<mapper resource="sqlMap/logistic/tLogisticParcel-mybatis-sqlmap.xml" />
+		<mapper resource="sqlMap/logistic/tLogisticUser-mybatis-sqlmap.xml" />
+	</mappers>
+        
+</configuration>  

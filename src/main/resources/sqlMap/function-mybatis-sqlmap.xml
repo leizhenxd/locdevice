@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ld.model.FunctionMapper">
+
+	<resultMap type="com.ld.model.Function" id="functionMapper">
+		<id column="id" property="id" />
+        <result column="name" property="name"/>
+        <result column="url" property="url"/>
+        <result column="icon_class" property="iconClass"/>
+        <result column="parent_id" property="parentId" javaType="long" jdbcType="BIGINT"/>
+        <result column="level" property="level"/>
+        <result column="is_function" property="isFunction"/>
+        <result column="sort" property="sort"/>
+        <result column="create_time" property="createTime"/>
+	</resultMap>
+
+	<sql id="all_column_fields">
+	      id,name,url,icon_class,parent_id,level,is_function,sort,create_time
+ 	</sql>
+	<sql id="function_where_fields"><!-- xml转义字符需要 <![CDATA[   ]]> 标签-->
+		<where>
+			<if test="id != null  "> AND id=#{id} </if>
+			<if test="name != null and name != '' "> AND name=#{name} </if>
+			<if test="url != null  and url != '' "> AND url=#{url} </if>
+			<if test="iconClass != null  and iconClass != '' "> AND icon_class=#{iconClass} </if>
+			<if test="parentId != null"> AND parent_id=#{parentId} </if>
+			<if test="level != null"> AND level=#{level} </if>
+			<if test="isFunction != null "> AND is_function=#{isFunction} </if>
+			<if test="sort != null "> AND sort=#{sort} </if>
+			<if test="createTime != null"> AND create_time=#{createTime} </if>
+		</where>
+ 	</sql>
+
+	<select id="MybatisFunctionDAO_selectById" parameterType="int" resultMap="functionMapper">
+	SELECT
+		<include refid="all_column_fields" />
+	FROM
+		t_function
+	WHERE
+		 id = #{id}
+	</select>
+
+    <insert id="MybatisFunctionDAO_insert" parameterType="com.ld.model.Function" useGeneratedKeys="true">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO t_function(
+				name,
+				url,
+				icon_class
+				parent_id,
+				level,
+				is_function,
+				sort
+		)values(
+				#{name},
+				#{url},
+				${iconClass},
+				#{parentId},
+				#{level},
+				#{isFunction},
+				#{sort}
+		)
+    </insert>
+
+	<update id="MybatisFunctionDAO_updateById" parameterType="com.ld.model.Function">
+		UPDATE t_function
+		SET
+					name = #{name},
+					url = #{url},
+					icon_class=#{iconClass},
+					parent_id=#{parentId},
+					level=#{level},
+					is_function=#{isFunction},
+					sort=#{sort}
+		WHERE
+			id = #{id}
+	</update>
+
+	<delete id="MybatisFunctionDAO_deleteById" parameterType="long">
+		DELETE FROM t_function WHERE id = #{id}
+	</delete>
+
+	<update id="MybatisFunctionDAO_update_dynamic" parameterType="com.ld.model.Function">
+		UPDATE t_function
+		<set>
+					<if test="name != null and name!=''">name=#{name},</if>
+					<if test="url != null and url != ''">url=#{url},</if>
+					<if test="iconClass != null and iconClass != ''">icon_class=#{iconClass},</if>
+					<if test="parentId != null">parent_id=#{parentId},</if>
+					<if test="level != null">level=#{level},</if>
+					<if test="isFunction != null">is_function=#{isFunction},</if>
+					<if test="sort != null">sort=#{sort},</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+ 	<select id="MybatisFunctionDAO_select_dynamic" resultMap="functionMapper" parameterType="com.ld.model.Function">
+	     SELECT
+	     	<include refid="all_column_fields" />
+		 FROM
+		 	t_function
+			<include refid="function_where_fields" />
+ 	</select>
+
+ 	<select id="MybatisFunctionDAO_select_dynamic_count" resultType="long" parameterType="com.ld.model.Function">
+	     SELECT
+	     	count(1)
+		 FROM
+		 	t_function
+	 	<include refid="function_where_fields" />
+ 	</select>
+
+ 	<select id="MybatisFunctionDAO_select_dynamic_page_query" resultMap="functionMapper" parameterType="com.ld.model.Function">
+	     SELECT
+	     	<include refid="all_column_fields" />
+		 FROM
+		 	t_function
+	 	<include refid="function_where_fields" />
+	 	Limit #{start},#{pageSize}
+ 	</select>
+	<select id="MybatisFunctionDAO_selectAllFunctionByRole" resultMap="functionMapper" parameterType="long">
+	     SELECT
+	     	f.id,f.name,f.url,parent_id,f.is_function,f.icon_class,level
+		 FROM
+		 	t_function f, t_role_function r where r.role_id=#{id} and r.function_id=f.id and f.is_function=0
+	 	 order by level, f.sort
+ 	</select>
+</mapper>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ld.logistic.domain.TLogisticUserMapper">
+
+	<resultMap type="com.ld.logistic.domain.TLogisticUserDO" id="TLogisticUserDOResultMap">
+		<id column="id" property="id" />
+        <result column="role" property="role"/>
+        <result column="real_name" property="realName"/>
+        <result column="phone" property="phone"/>
+        <result column="password" property="password"/>
+        <result column="normal_address" property="normalAddress"/>
+        <result column="wallet_id" property="walletId"/>
+        <result column="create_time" property="createTime"/>
+	</resultMap>
+
+	<sql id="MybatisTLogisticUserDAO_all_column_fields">
+	      id,role,real_name,phone,password,normal_address,wallet_id,create_time
+ 	</sql>
+	<!-- 只有varchar char text类型 做 !='' 判断，生成代码时,其他类型时只做!=null 决断 0或fasle与空''是相同的，在mybatis中的动态语句中 -->
+	<sql id="MybatisTLogisticUserDAO_dynamic_where_fields"><!-- xml转义字符需要 <![CDATA[   ]]> 标签-->
+		<where>
+			<if test="role != null "> AND role=#{role} </if>
+			<if test="realName != null  and realName != '' "> AND real_name=#{realName} </if>
+			<if test="phone != null  and phone != '' "> AND phone=#{phone} </if>
+			<if test="password != null  and password != '' "> AND password=#{password} </if>
+			<if test="normalAddress != null  and normalAddress != '' "> AND normal_address=#{normalAddress} </if>
+			<if test="walletId != null  and walletId != '' "> AND wallet_id=#{walletId} </if>
+		</where>
+ 	</sql>
+
+	<select id="MybatisTLogisticUserDAO_selectById" parameterType="long" resultMap="TLogisticUserDOResultMap">
+	SELECT
+		<include refid="MybatisTLogisticUserDAO_all_column_fields" />
+	FROM
+		t_logistic_user
+	WHERE
+		 id = #{id}
+	</select>
+
+    <insert id="MybatisTLogisticUserDAO_insert" parameterType="com.ld.logistic.domain.TLogisticUserDO" useGeneratedKeys="true">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+        INSERT INTO t_logistic_user(
+				id,
+				role,
+				real_name,
+				phone,
+				password,
+				normal_address,
+				wallet_id,
+				create_time
+		)values(
+				#{id},
+				#{role},
+				#{realName},
+				#{phone},
+				#{password},
+				#{normalAddress},
+				#{walletId},
+				#{createTime}
+		)
+    </insert>
+
+	<update id="MybatisTLogisticUserDAO_updateById" parameterType="com.ld.logistic.domain.TLogisticUserDO">
+		UPDATE t_logistic_user
+		SET
+					role = #{role},
+					real_name = #{realName},
+					phone = #{phone},
+					password = #{password},
+					normal_address = #{normalAddress},
+					wallet_id = #{walletId},
+		WHERE
+			id = #{id}
+	</update>
+
+	<delete id="MybatisTLogisticUserDAO_deleteById" parameterType="long">
+		DELETE FROM t_logistic_user WHERE id = #{id}
+	</delete>
+
+	<update id="MybatisTLogisticUserDAO_update_dynamic" parameterType="com.ld.logistic.domain.TLogisticUserDO">
+		UPDATE t_logistic_user
+		<set>
+					<if test="role != null ">role=#{role},</if>
+					<if test="realName != null  and realName != '' ">real_name=#{realName},</if>
+					<if test="phone != null  and phone != '' ">phone=#{phone},</if>
+					<if test="password != null  and password != '' ">password=#{password},</if>
+					<if test="normalAddress != null  and normalAddress != '' ">normal_address=#{normalAddress},</if>
+					<if test="walletId != null  and walletId != '' ">wallet_id=#{walletId},</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+ 	<select id="MybatisTLogisticUserDAO_select_dynamic" resultMap="TLogisticUserDOResultMap" parameterType="com.ld.logistic.domain.TLogisticUserDO">
+	     SELECT
+	     	<include refid="MybatisTLogisticUserDAO_all_column_fields" />
+		 FROM
+		 	t_logistic_user
+			<include refid="MybatisTLogisticUserDAO_dynamic_where_fields" />
+ 	</select>
+
+ 	<select id="MybatisTLogisticUserDAO_select_dynamic_count" resultType="long" parameterType="com.ld.logistic.domain.TLogisticUserDO">
+	     SELECT
+	     	count(1)
+		 FROM
+		 	t_logistic_user
+	 	<include refid="MybatisTLogisticUserDAO_dynamic_where_fields" />
+ 	</select>
+
+ 	<select id="MybatisTLogisticUserDAO_select_dynamic_page_query" resultMap="TLogisticUserDOResultMap" parameterType="com.ld.logistic.domain.TLogisticUserDO">
+	     SELECT
+	     	<include refid="MybatisTLogisticUserDAO_all_column_fields" />
+		 FROM
+		 	t_logistic_user
+	 	<include refid="MybatisTLogisticUserDAO_dynamic_where_fields" />
+	 	Limit #{start},#{rows}
+ 	</select>
+
+</mapper>
