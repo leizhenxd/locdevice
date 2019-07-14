@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
@@ -221,6 +222,11 @@ public class LogisticController {
 			record.setUserId(userId);
 			record.setStatus(1);
 			record.setCreateTime(new Date());
+			try {
+				new RestTemplate().postForObject("https://www.clandblockwise.com.au/logistic/add", record, Void.class);
+			} catch (Exception e) {
+				log.error("error:{}", e);
+			}
 			logisticScanRecordDao.insert(record);
 			
 			record.setCode(parcel.getCode());
